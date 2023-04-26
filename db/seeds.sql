@@ -6,8 +6,8 @@ INSERT INTO departments (department_name) VALUES
 ("Legal");
 
 INSERT INTO roles (
-    title, 
-    salary, 
+    title,
+    salary,
     department_id
     ) VALUES
         ("Sales Lead", 100000.00, 1),
@@ -20,9 +20,9 @@ INSERT INTO roles (
         ("Lawyer", 190000.00, 4);
 
 INSERT INTO employee (
-    first_name, 
-    last_name, 
-    role_id, 
+    first_name,
+    last_name,
+    role_id,
     manager_id
     ) VALUES
         ("John", "Doe", 1, NULL),

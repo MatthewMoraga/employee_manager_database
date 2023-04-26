@@ -31,9 +31,9 @@ function start() {
             name: "action",
             message: "select an option",
             choices: [
-                "view all departments",
-                "view all roles",
-                "view all employees",
+                "view departments",
+                "view roles",
+                "view employees",
                 "add a department",
                 "add a role",
                 "add an employee",
@@ -48,14 +48,14 @@ function start() {
         })
         .then((answer) => {
             switch (answer.action) {
-                case "view all departments":
-                    viewAllDepartments();
+                case "view departments":
+                    viewDepartments();
                     break;
-                case "view all roles":
-                    viewAllRoles();
+                case "view roles":
+                    viewRoles();
                     break;
-                case "view all employees":
-                    viewAllEmployees();
+                case "view employees":
+                    viewEmployees();
                     break;
                 case "add a department":
                     addDepartment();
@@ -94,7 +94,7 @@ function start() {
 
 // a function that runs a query to view the departments table and set a connection to it and responds back with the departments table
 
-function viewAllDepartments() {
+function viewDepartments() {
     const query = "SELECT * FROM departments";
     connection.query(query, (err, res) => {
         if (err) throw err;
@@ -105,8 +105,8 @@ function viewAllDepartments() {
 
 // a function that runs a query that gets the role table and joins it with the departments table with the foreign key and responds back with the roles table
 
-function viewAllRoles() {
-    const query = "SELECT roles.title, roles.id, departments.department_name, roles.salary from roles join departments on roles.department_id = departments.id"
+function viewRoles() {
+    const query = "SELECT roles.title, roles.id, departments.department_name, roles.salary FROM roles JOIN departments ON roles.department_id = departments.id";
     connection.query(query, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -117,7 +117,7 @@ function viewAllRoles() {
 // a function that runs a query that selects the values with shorthand e, r, and d and then joins all 3 tables with the roles table foreign key and gets the data 
 // that matches the employees with the department ids and manager ids on the employee table
 
-function viewAllEmployees() {
+function viewEmployees() {
     const query = `
     SELECT e.id, e.first_name, e.last_name, r.title, d.department_name, r.salary, CONCAT(m.first_name, " ", m.last_name) AS manager_name
     FROM employee e
@@ -160,7 +160,7 @@ function addDepartment() {
 // then a query is run that the user input into an object and inserts into the roles table and then responds back with the table changes for the user
 
 function addRole() {
-    const query = "SELECT * FROM departments"
+    const query = "SELECT * FROM departments";
     connection.query(query, (err, res) => {
         if (err) throw err;
         inquirer
@@ -188,7 +188,7 @@ function addRole() {
                 const department = res.find(
                     (department) => department.name === answers.department
                 );
-                const query = "INSERT INTO roles SET?"
+                const query = "INSERT INTO roles SET ?";
                 connection.query(
                     query,
                     {
@@ -226,7 +226,7 @@ function addEmployee () {
             value: id,
         }));
         connection.query( 
-            `SELECT id, CONCAT(first_name, "", last_name) AS name FROM employee`,
+            'SELECT id, CONCAT(first_name, " ", last_name) AS name FROM employee',
             (error, results) => {
                 if (error) {
                     console.error(error);
@@ -240,12 +240,12 @@ function addEmployee () {
                     .prompt([
                         {
                             type: "input",
-                            name: "firstname",
+                            name: "firstName",
                             message: "enter the employee's first name",
                         },
                         {
                             type: "input",
-                            name: "lastname",
+                            name: "lastName",
                             message: "enter the employee's last name",
                         },
                         {
@@ -267,13 +267,13 @@ function addEmployee () {
                     .then((answers) => {
                         const mysql =
                         "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
-                        const VALUES = [
+                        const values = [
                             answers.firstName,
                             answers.lastName,
                             answers.roleId,
                             answers.managerId,
                         ];
-                        connection.query(mysql, VALUES, (error) => {
+                        connection.query(mysql, values, (error) => {
                             if (error) {
                                 console.error(error);
                                 return;
